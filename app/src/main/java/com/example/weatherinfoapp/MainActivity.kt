@@ -3,11 +3,13 @@ package com.example.weatherinfoapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherinfoapp.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var mainViewBinding = ActivityMainBinding.inflate(layoutInflater)
