@@ -5,7 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface WeatherEndpoints {
-    //    @GET("/lat=35&lon=139&appid=${R.string.api_key}")
     @GET("data/2.5/weather")
-    fun getWeather(@Query("q") location: String, @Query("appid") key: String): Call<WeatherInfo>
+    fun getWeather(
+        @Query("q") location: String,
+        @Query("appid") key: String,
+        @Query("units") units: String
+    ): Call<WeatherInfo>
 }

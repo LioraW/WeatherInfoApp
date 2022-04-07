@@ -12,7 +12,7 @@ import retrofit2.Callback
 import retrofit2.Call
 import retrofit2.Response
 
-class CitiesFragment: Fragment(R.layout.cities_fragment) {
+class CitiesFragment : Fragment(R.layout.cities_fragment) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,42 +21,55 @@ class CitiesFragment: Fragment(R.layout.cities_fragment) {
     ): View {
         val binding = CitiesFragmentBinding.inflate(inflater, container, false)
 
-
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
-        val call = request.getWeather("London", getString(R.string.api_key))
+        val cally = request.getWeather("Orlando", getString(R.string.api_key), "imperial")
+        val calls: MutableList<Call<WeatherInfo>> = arrayListOf(cally)
 
-//        val rvCities = binding.rvCities
+        for (cityName in resources.getStringArray(R.array.cityNames)) {
+            calls.add(request.getWeather(cityName, getString(R.string.api_key), "imperial"))
+        }
+
+        val rvCities = binding.rvCities
         val tvCities = binding.tvCitiesFragment
 
 
-        call.enqueue(object: Callback<WeatherInfo>{
-            override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
-                Toast.makeText(this@CitiesFragment.context, "Success", Toast.LENGTH_SHORT).show()
-                if (response.isSuccessful){
-                    val resBody = response.body()
+//        call.enqueue(object: Callback<WeatherInfo>{
+        calls.forEach { call ->
+            call.enqueue(object : Callback<WeatherInfo> {
+                override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
+                    if (response.isSuccessful) {
 
-                    resBody?.weather?.forEach{result -> tvCities.append(result.main)}
+                        rvCities.apply {
+                            setHasFixedSize(true)
 
-//                    rvCities.apply {
-//                        setHasFixedSize(true)
-//
-//                        layoutManager = LinearLayoutManager(this.context)
-//                        adapter = WeatherAdapter(response.body()!!.weather)
-//
-//                    }
-                } else {
-                    tvCities.text = "Code :" + response.code()
+                            layoutManager = LinearLayoutManager(this.context)
+                            adapter = WeatherAdapter(
+                                response.body()!!.weather,
+                                requireContext().resources
+                            )
+
+                            binding.rvCities.adapter = adapter
+
+                        }
+                    } else {
+                        tvCities.text = "Code :" + response.code()
+                        return
+                    }
+                }
+
+                override fun onFailure(call: Call<WeatherInfo>, t: Throwable) {
+                    tvCities.text = "Failed: ${t.message}"
+                    Toast.makeText(this@CitiesFragment.context, "${t.message}", Toast.LENGTH_LONG)
+                        .show()
                     return
                 }
             }
-
-            override fun onFailure(call: Call<WeatherInfo>, t: Throwable){
-                tvCities.text = "Failed: ${t.message}"
-                Toast.makeText(this@CitiesFragment.context, "${t.message}", Toast.LENGTH_LONG).show()
-            }
+            )
         }
-        )
+
+
+
         return binding.root
     }
 
