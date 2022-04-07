@@ -18,18 +18,13 @@ class CitiesFragment: Fragment(R.layout.cities_fragment) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+    ): View {
+        val binding = CitiesFragmentBinding.inflate(inflater, container, false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
         val call = request.getWeather("London", getString(R.string.api_key))
-
-        val binding = CitiesFragmentBinding.inflate(layoutInflater)
 
 //        val rvCities = binding.rvCities
         val tvCities = binding.tvCitiesFragment
@@ -41,7 +36,7 @@ class CitiesFragment: Fragment(R.layout.cities_fragment) {
                 if (response.isSuccessful){
                     val resBody = response.body()
 
-                    tvCities.text = resBody?.weather?.main
+                    resBody?.weather?.forEach{result -> tvCities.append(result.main)}
 
 //                    rvCities.apply {
 //                        setHasFixedSize(true)
@@ -57,11 +52,12 @@ class CitiesFragment: Fragment(R.layout.cities_fragment) {
             }
 
             override fun onFailure(call: Call<WeatherInfo>, t: Throwable){
-                Toast.makeText(this@CitiesFragment.context, "${t.message}", Toast.LENGTH_SHORT).show()
+                tvCities.text = "Failed: ${t.message}"
+                Toast.makeText(this@CitiesFragment.context, "${t.message}", Toast.LENGTH_LONG).show()
             }
         }
         )
-
+        return binding.root
     }
 
 
