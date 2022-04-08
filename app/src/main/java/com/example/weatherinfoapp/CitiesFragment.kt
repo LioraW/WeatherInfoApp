@@ -23,38 +23,42 @@ class CitiesFragment : Fragment(R.layout.cities_fragment) {
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
-        val cally = request.getWeather("Orlando", getString(R.string.api_key), "imperial")
-        val calls: MutableList<Call<WeatherInfo>> = arrayListOf(cally)
+        val cally = request.getWeather("london", getString(R.string.api_key), "imperial")
+        val calls: MutableList<Call<WeatherInfo>> = arrayListOf()
 
         for (cityName in resources.getStringArray(R.array.cityNames)) {
-            calls.add(request.getWeather(cityName, getString(R.string.api_key), "imperial"))
+            val call = request.getWeather(cityName, getString(R.string.api_key), "imperial")
+            calls.add(call)
         }
+        calls.add(cally)
 
         val rvCities = binding.rvCities
         val tvCities = binding.tvCitiesFragment
 
+        val results: MutableList<WeatherInfo> = arrayListOf()
 
 //        call.enqueue(object: Callback<WeatherInfo>{
         calls.forEach { call ->
             call.enqueue(object : Callback<WeatherInfo> {
                 override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
                     if (response.isSuccessful) {
-
+                        val result = response.body()!!
+                        results.add(result)
                         rvCities.apply {
                             setHasFixedSize(true)
+                            Toast.makeText( this@CitiesFragment.context, "in apply $results", Toast.LENGTH_LONG)
+                                .show()
 
                             layoutManager = LinearLayoutManager(this.context)
                             adapter = WeatherAdapter(
-                                response.body()!!.weather,
+                                results,
                                 requireContext().resources
                             )
-
                             binding.rvCities.adapter = adapter
-
                         }
+
                     } else {
                         tvCities.text = "Code :" + response.code()
-                        return
                     }
                 }
 
@@ -67,6 +71,20 @@ class CitiesFragment : Fragment(R.layout.cities_fragment) {
             }
             )
         }
+
+
+//        rvCities.apply {
+//            setHasFixedSize(true)
+//            Toast.makeText(this@CitiesFragment.context, "in apply $results", Toast.LENGTH_LONG)
+//                .show()
+//
+//            layoutManager = LinearLayoutManager(this.context)
+//            adapter = WeatherAdapter(
+//                results,
+//                requireContext().resources
+//            )
+//            binding.rvCities.adapter = adapter
+//        }
 
 
 
