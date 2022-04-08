@@ -2,7 +2,8 @@ package com.example.weatherinfoapp
 
 data class WeatherInfo(
     val weather: List<WeatherResults>,
-    val main: Main
+    val main: Main,
+    val name: String
 
 )
 

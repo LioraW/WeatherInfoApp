@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">WeatherInfoApp</string>
-    <string name="home">Home</string>
-    <string name="cities">Cities</string>
-    <string name="alerts">Alerts</string>
+    <string name="home">St. Louis</string>
+    <string name="London">London</string>
+    <string name="Chicago">Chicago</string>
     <string name="api_key">2833d0644c5376a1ab82adcf01ac0cb1</string>
 </resources>

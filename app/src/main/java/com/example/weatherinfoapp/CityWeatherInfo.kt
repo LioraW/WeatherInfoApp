@@ -12,40 +12,32 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CityWeatherInfo(location: String, con: Context?){
+class CityWeatherInfo(private val location: String, val context: Context?){
 
-    var isSuccessful = false
-    var responseCode: Int = 0
-    val context = con
+    fun getInfo(): Response<WeatherInfo>? {
 
-    fun getInfo(): WeatherInfo? {
-
-        var wi : WeatherInfo? = null
+        var resp : Response<WeatherInfo>? = null
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
-        val call = request.getWeather("London", R.string.api_key.toString(), "imperial")
+        val call = request.getWeather(location, R.string.api_key.toString(), "imperial")
 
         call.enqueue(object: Callback<WeatherInfo> {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
-                Log.d("umsl", "onResponse:succcessful ")
                 if (response.isSuccessful){
-                    wi = response.body()!!
-                    isSuccessful = true
+                    resp =  response
                 } else {
-                    Log.d("umsl", "onResponse:error ")
-                    responseCode = response.code()
+                    resp = response
                     return
                 }
             }
 
             override fun onFailure(call: Call<WeatherInfo>, t: Throwable){
                 //failure
-//                Toast.makeText(context, "${t.message}", Toast.LENGTH_LONG).show()
                 return
             }
         }
         )
-        return wi
+        return resp
     }
 }

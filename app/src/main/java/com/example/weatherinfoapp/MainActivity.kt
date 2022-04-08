@@ -3,9 +3,7 @@ package com.example.weatherinfoapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherinfoapp.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 
 
 class MainActivity : AppCompatActivity() {
@@ -13,27 +11,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var mainViewBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainViewBinding.root) //mainViewBinding.root
+        setContentView(mainViewBinding.root)
 
         val homeFragment = HomeFragment()
-        val citiesFragment = CitiesFragment()
-        val alertsFragment = AlertsFragment()
+        val londonFragment = LondonFragment()
+        val chicagoFragment = ChicagoFragment()
 
         setFragment(homeFragment)
 
         mainViewBinding.bnvBottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.miHome -> setFragment(homeFragment)
-                R.id.miCities -> setFragment(citiesFragment)
-                R.id.miAlerts -> setFragment(alertsFragment)
+                R.id.miLondon -> setFragment(londonFragment)
+                R.id.miChicago -> setFragment(chicagoFragment)
             }
             true //return statement to true (its a lambda)
         }
-
-        mainViewBinding.bnvBottomNavigationView.getOrCreateBadge(R.id.miAlerts).apply {
-            number = 5
-        }
-
 
     }
 

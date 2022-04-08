@@ -6,30 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.weatherinfoapp.databinding.HomeFragmentBinding
+import com.example.weatherinfoapp.databinding.ChicagoFragmentBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeFragment: Fragment(R.layout.home_fragment) {
+class ChicagoFragment: Fragment(R.layout.chicago_fragment) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val cityName = "St. Louis"
-        val binding = HomeFragmentBinding.inflate(inflater, container, false)
+        val cityName = "Chicago"
+        val binding = ChicagoFragmentBinding.inflate(inflater, container, false)
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
         val call = request.getWeather(cityName, getString(R.string.api_key), "imperial")
 
-        val tvName = binding.tvHomeFragment
-        val tvDescription = binding.tvHomeCityName
-        val tvTemp = binding.tvCurrentTemp
+        val tvName = binding.tvChicagoFragment
+        val tvDescription = binding.tvChicagoCityName
+        val tvTemp = binding.tvChicagoCurrentTemp
 
-        call.enqueue(object: Callback<WeatherInfo>{
+        call.enqueue(object: Callback<WeatherInfo> {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
                 if (response.isSuccessful){
                     val result = response.body()!!
@@ -45,13 +45,11 @@ class HomeFragment: Fragment(R.layout.home_fragment) {
             }
             override fun onFailure(call: Call<WeatherInfo>, t: Throwable){
                 tvName.text = "Failed: ${t.message}"
-                Toast.makeText(this@HomeFragment.context, "${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ChicagoFragment.context, "${t.message}", Toast.LENGTH_LONG).show()
                 return
             }
         }
         )
         return binding.root
     }
-
-
 }
