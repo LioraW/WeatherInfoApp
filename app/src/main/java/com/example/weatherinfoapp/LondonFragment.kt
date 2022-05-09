@@ -14,11 +14,12 @@ import com.example.weatherinfoapp.databinding.LondonFragmentBinding
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LondonFragment : Fragment(R.layout.london_fragment) {
-    data class LocationCoordinates(var lat: Double?, var lon: Double?)
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val PERMISSIONS_REQUEST_LOCATION = 1
@@ -33,14 +34,14 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val binding = LondonFragmentBinding.inflate(inflater, container, false)
-
+        val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
 
         val tvName = binding.tvLondonName
         val tvDescription = binding.tvLondonDescription
         val tvTemp = binding.tvLondonCurrentTemp
 
-        //getCurrentLocation() //modifies lc dataclass instance
+        //getCurrentLocation()
         if ( ActivityCompat.checkSelfPermission( requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission( requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -57,17 +58,35 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
         }
 
         //then use the locationProvider
-        fusedLocationProviderClient.lastLocation
+        fusedLocationProviderClient.lastLocation //last location, needs someone else to request locaiton
             .addOnSuccessListener { location : Location? ->
-                Toast.makeText(requireContext(), "Latitude: ${location?.latitude}, Longitude: ${location?.longitude}", Toast.LENGTH_SHORT).show()
 
-                tvName.text = " Current Latitude${location?.latitude}"
-                tvDescription.text = "Current Longitude: ${location?.longitude}"
-//          tvTemp.text = "Current Tempurature: ${result.main.temp} F"
+                val call = request.getWeather("${location?.latitude}","${location?.longitude}", getString(R.string.api_key), "imperial")
+
+                //make call
+                call.enqueue(object: Callback<WeatherInfo> {
+                    override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {
+                        if (response.isSuccessful){
+                            val result = response.body()!!
+
+                            tvName.text = result.name
+                            tvDescription.text = "Current Weather: ${result.weather[0].description}"
+                            tvTemp.text = "Current Temperature: ${result.main.temp} F"
+
+                        } else {
+                            tvName.text = "Code :" + response.code()
+                            return
+                        }
+                    }
+                    override fun onFailure(call: Call<WeatherInfo>, t: Throwable){
+                        tvName.text = "Failed: ${t.message}"
+                        Toast.makeText(this@LondonFragment.context, "${t.message}", Toast.LENGTH_LONG).show()
+                        return
+                    }
+                }
+                )
 
             }
-
-
 
         return binding.root
     }
