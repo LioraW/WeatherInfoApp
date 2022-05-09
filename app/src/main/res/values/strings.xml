@@ -4,4 +4,8 @@
     <string name="London">London</string>
     <string name="Chicago">Chicago</string>
     <string name="api_key">2833d0644c5376a1ab82adcf01ac0cb1</string>
+    <string name="lat">38.7092229</string>
+    <string name='lon'>-90.310511</string>
+    <string name='MAPS_API_KEY'>AIzaSyAGBtaUdeqs190bkvXj4KyKo0xGFSWdK_4</string>
+
 </resources>

@@ -6,6 +6,8 @@ plugins {
 android {
     compileSdk 32
 
+    apply plugin: 'com.android.application'
+
     defaultConfig {
         applicationId "com.example.weatherinfoapp"
         minSdk 24
@@ -40,6 +42,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.android.databinding:viewbinding:7.1.2'

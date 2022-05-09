@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CityWeatherInfo(private val location: String, val context: Context?){
+class CityWeatherInfo(private val lat: String, private val lon: String,val context: Context?){
 
     fun getInfo(): Response<WeatherInfo>? {
 
@@ -20,7 +20,7 @@ class CityWeatherInfo(private val location: String, val context: Context?){
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
-        val call = request.getWeather(location, R.string.api_key.toString(), "imperial")
+        val call = request.getWeather(lat, lon, R.string.api_key.toString(), "imperial")
 
         call.enqueue(object: Callback<WeatherInfo> {
             override fun onResponse(call: Call<WeatherInfo>, response: Response<WeatherInfo>) {

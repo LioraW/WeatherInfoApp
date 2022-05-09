@@ -23,7 +23,7 @@ class ChicagoFragment: Fragment(R.layout.chicago_fragment) {
 
         val request = ServiceBuilder.buildService(WeatherEndpoints::class.java)
 
-        val call = request.getWeather(cityName, getString(R.string.api_key), "imperial")
+        val call = request.getWeather(getString(R.string.lat),getString(R.string.lon), getString(R.string.api_key), "imperial")
 
         val tvName = binding.tvChicagoFragment
         val tvDescription = binding.tvChicagoCityName

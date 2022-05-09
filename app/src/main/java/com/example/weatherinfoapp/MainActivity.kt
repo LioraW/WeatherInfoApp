@@ -1,9 +1,16 @@
 package com.example.weatherinfoapp
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.weatherinfoapp.databinding.ActivityMainBinding
+import android.widget.Toast
+
+import android.location.LocationManager
+import java.util.jar.Manifest
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,5 +44,8 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
+
+
+
 
 }
