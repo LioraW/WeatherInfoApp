@@ -1,15 +1,20 @@
 <resources>
     <string name="app_name">WeatherInfoApp</string>
-    <string name="home">St. Louis</string>
-    <string name="London">London</string>
-    <string name="Chicago">Chicago</string>
-    <string name="api_key">2833d0644c5376a1ab82adcf01ac0cb1</string>
+    <string name="umsl">UMSL</string>
+    <string name="current">Current Location</string>
+
+
+<!--    UMSL Location-->
     <string name="lat">38.7092229</string>
     <string name='lon'>-90.310511</string>
 
+
+<!--    TODO: security issues-->
     <string name='MAPS_API_KEY'>AIzaSyAGBtaUdeqs190bkvXj4KyKo0xGFSWdK_4</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="api_key">2833d0644c5376a1ab82adcf01ac0cb1</string>
+
     <!-- Strings used for fragments for navigation -->
+    <string name="title_activity_maps">MapsActivity</string>
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>

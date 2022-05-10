@@ -1,33 +1,16 @@
 package com.example.weatherinfoapp
 
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -41,10 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 
 /**
@@ -68,12 +48,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private var lastKnownLocation: Location? = null
-    private var likelyPlaceNames: Array<String?> = arrayOfNulls(0)
-    private var likelyPlaceAddresses: Array<String?> = arrayOfNulls(0)
-    private var likelyPlaceAttributions: Array<List<*>?> = arrayOfNulls(0)
-    private var likelyPlaceLatLngs: Array<LatLng?> = arrayOfNulls(0)
-
-//    private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,11 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // Retrieve the content view that renders the map.
-//        binding = ActivityMapsBinding.inflate(layoutInflater)
-//        val view = binding.root
-//        setContentView(view)
         setContentView(R.layout.activity_maps)
-
 
         // Construct a PlacesClient
         Places.initialize(applicationContext, getString(R.string.MAPS_API_KEY))
@@ -102,6 +72,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
+        //add the back button
+        val btnBack = findViewById<Button>(R.id.backButton)
+        btnBack.setOnClickListener(){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent) //run the maps activity
+
+        }
     }
 
     /**
@@ -157,10 +135,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (locationPermissionGranted) {
                 val locationResult = fusedLocationProviderClient.lastLocation
@@ -191,11 +165,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * Prompts the user for permission to use the device location.
      */
     private fun getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
@@ -225,112 +194,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
         updateLocationUI()
-    }
-
-    /**
-     * Prompts the user to select the current place from a list of likely places, and shows the
-     * current place on the map - provided the user has granted location permission.
-     */
-    @SuppressLint("MissingPermission")
-    private fun showCurrentPlace() {
-        if (map == null) {
-            return
-        }
-        if (locationPermissionGranted) {
-            // Use fields to define the data types to return.
-            val placeFields = listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
-
-            // Use the builder to create a FindCurrentPlaceRequest.
-            val request = FindCurrentPlaceRequest.newInstance(placeFields)
-
-            // Get the likely places - that is, the businesses and other points of interest that
-            // are the best match for the device's current location.
-            val placeResult = placesClient.findCurrentPlace(request)
-            placeResult.addOnCompleteListener { task ->
-                if (task.isSuccessful && task.result != null) {
-                    val likelyPlaces = task.result
-
-                    // Set the count, handling cases where less than 5 entries are returned.
-                    val count = if (likelyPlaces != null && likelyPlaces.placeLikelihoods.size < M_MAX_ENTRIES) {
-                        likelyPlaces.placeLikelihoods.size
-                    } else {
-                        M_MAX_ENTRIES
-                    }
-                    var i = 0
-                    likelyPlaceNames = arrayOfNulls(count)
-                    likelyPlaceAddresses = arrayOfNulls(count)
-                    likelyPlaceAttributions = arrayOfNulls<List<*>?>(count)
-                    likelyPlaceLatLngs = arrayOfNulls(count)
-                    for (placeLikelihood in likelyPlaces?.placeLikelihoods ?: emptyList()) {
-                        // Build a list of likely places to show the user.
-                        likelyPlaceNames[i] = placeLikelihood.place.name
-                        likelyPlaceAddresses[i] = placeLikelihood.place.address
-                        likelyPlaceAttributions[i] = placeLikelihood.place.attributions
-                        likelyPlaceLatLngs[i] = placeLikelihood.place.latLng
-                        i++
-                        if (i > count - 1) {
-                            break
-                        }
-                    }
-
-                    // Show a dialog offering the user the list of likely places, and add a
-                    // marker at the selected place.
-                    openPlacesDialog()
-                } else {
-                    Log.e(TAG, "Exception: %s", task.exception)
-                }
-            }
-        } else {
-            // The user has not granted permission.
-            Log.i(TAG, "The user did not grant location permission.")
-
-            // Add a default marker, because the user hasn't selected a place.
-            map?.addMarker(MarkerOptions()
-                .title(getString(R.string.default_info_title))
-                .position(defaultLocation)
-                .snippet(getString(R.string.default_info_snippet)))
-
-            // Prompt the user for permission.
-            getLocationPermission()
-        }
-    }
-
-    /**
-     * Displays a form allowing the user to select a place from a list of likely places.
-     */
-    private fun openPlacesDialog() {
-        // Ask the user to choose the place where they are now.
-        val listener = DialogInterface.OnClickListener { dialog, which -> // The "which" argument contains the position of the selected item.
-            val markerLatLng = likelyPlaceLatLngs[which]
-            var markerSnippet = likelyPlaceAddresses[which]
-            if (likelyPlaceAttributions[which] != null) {
-                markerSnippet = """
-                    $markerSnippet
-                    ${likelyPlaceAttributions[which]}
-                    """.trimIndent()
-            }
-
-            if (markerLatLng == null) {
-                return@OnClickListener
-            }
-
-            // Add a marker for the selected place, with an info window
-            // showing information about that place.
-            map?.addMarker(MarkerOptions()
-                .title(likelyPlaceNames[which])
-                .position(markerLatLng)
-                .snippet(markerSnippet))
-
-            // Position the map's camera at the location of the marker.
-            map?.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
-                DEFAULT_ZOOM.toFloat()))
-        }
-
-        // Display the dialog.
-        AlertDialog.Builder(this)
-            .setTitle(R.string.pick_place)
-            .setItems(likelyPlaceNames, listener)
-            .show()
     }
 
     /**
@@ -365,8 +228,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val KEY_CAMERA_POSITION = "camera_position"
         private const val KEY_LOCATION = "location"
 
-        // Used for selecting the current place.
-        private const val M_MAX_ENTRIES = 5
     }
 }
 

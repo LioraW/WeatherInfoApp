@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tvLondonName"
+            android:id="@+id/tvHomeFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -26,36 +26,36 @@
             app:layout_constraintVertical_bias="0.082" />
 
         <TextView
-            android:id="@+id/tvLondonDescription"
+            android:id="@+id/tvHomeCityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLondonName"
+            app:layout_constraintTop_toBottomOf="@id/tvHomeFragment"
             tools:layout_editor_absoluteY="139dp" />
 
         <TextView
-            android:id="@+id/tvLondonCurrentTemp"
+            android:id="@+id/tvCurrentTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLondonDescription"
+            app:layout_constraintTop_toBottomOf="@id/tvHomeCityName"
             tools:layout_editor_absoluteY="139dp" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:text="Open Maps"
+        <ImageView
+            android:id="@+id/weatherIcon"
+            android:layout_width="133dp"
+            android:layout_height="122dp"
+            android:contentDescription="weather Icon"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvHomeFragment"
+            app:srcCompat="@drawable/quantum_ic_cloud_off_vd_theme_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
