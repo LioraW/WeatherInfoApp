@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".CurrentLocationActivity"
+    tools:viewBindingIgnore="true"
+    >
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +35,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvLondonName"
-            tools:layout_editor_absoluteY="139dp" />
+            tools:layout_editor_absoluteY="139dp"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/tvLondonCurrentTemp"
@@ -43,32 +46,33 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvLondonDescription"
-            tools:layout_editor_absoluteY="139dp" />
+            tools:layout_editor_absoluteY="139dp"
+            android:textSize="20sp"/>
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvLondonCurrentTemp"
-            tools:context="com.example.currentplacedetailsonmap.MapsActivityCurrentPlace" />
-
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLondonCurrentTemp"
+                tools:context="com.example.currentplacedetailsonmap.MapsActivityCurrentPlace"
+                />
         <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:text="Open Maps"
+            android:text="Back"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

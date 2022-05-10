@@ -1,7 +1,8 @@
 package com.example.weatherinfoapp
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.weatherinfoapp.databinding.ActivityMainBinding
 
@@ -14,14 +15,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainViewBinding.root)
 
         val umslFragment = UMSLFragment()
-        val currentLocationFragment = CurrentLocationFragment()
+        val currentLocationFragment = CurrentLocationActivity()
 
-        setFragment(currentLocationFragment)
+        setFragment(umslFragment)
 
         mainViewBinding.bnvBottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.miUMSL -> setFragment(umslFragment)
-                R.id.miCurrent -> setFragment(currentLocationFragment)
+                R.id.miCurrent -> {
+                    val intent = Intent(this, CurrentLocationActivity::class.java)
+                    startActivity(intent) //run the maps activity
+                }
             }
             true //return statement to true (its a lambda)
         }

@@ -38,7 +38,7 @@ class UMSLFragment: Fragment(R.layout.umsl_fragment) {
             .setTitle("Severe Weather Alert")
             .setMessage("It is about to rain. You might want to carry an umbrella!")
             .setPositiveButton("Okay"){_, _, ->
-                Toast.makeText(this@UMSLFragment.context, "Clicked okay", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@UMSLFragment.context, "You will bring an umbrella", Toast.LENGTH_LONG).show()
 
             }
             .create()
@@ -50,8 +50,9 @@ class UMSLFragment: Fragment(R.layout.umsl_fragment) {
                     tvDescription.text = "Current Weather: ${result.weather[0].description}"
                     tvTemp.text = "Current Temperature: ${result.main.temp} F"
 
+                    val icon = result.weather[0].icon
                     Glide.with(requireContext())
-                        .load("http://openweathermap.org/img/wn/${result.weather[0].icon}@2x.png")
+                        .load("https://openweathermap.org/img/wn/${icon}@2x.png")
                         .into(ivIcon)
 
                     //show alert if it is raining
