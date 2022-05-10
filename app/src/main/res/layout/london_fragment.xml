@@ -45,6 +45,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvLondonDescription"
             tools:layout_editor_absoluteY="139dp" />
 
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:text="Open Maps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

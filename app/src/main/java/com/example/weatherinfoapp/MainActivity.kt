@@ -1,5 +1,6 @@
 package com.example.weatherinfoapp
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

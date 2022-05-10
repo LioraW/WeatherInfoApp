@@ -1,29 +1,47 @@
 package com.example.weatherinfoapp
 
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.weatherinfoapp.databinding.LondonFragmentBinding
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.libraries.places.api.net.PlacesClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.reflect.Array.getDouble
 
 
-class LondonFragment : Fragment(R.layout.london_fragment) {
+class LondonFragment : Fragment(R.layout.london_fragment){
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val PERMISSIONS_REQUEST_LOCATION = 1
-
+    private val defaultLocation = LatLng(38.7092229, -90.310511)
+    private var locationPermissionGranted = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +58,15 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
         val tvName = binding.tvLondonName
         val tvDescription = binding.tvLondonDescription
         val tvTemp = binding.tvLondonCurrentTemp
+        val btnAct2 = binding.button
+
+        btnAct2.setOnClickListener(){
+            Toast.makeText(requireContext(), "Welcome", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), MapsActivity::class.java) //from this package to activity 2, we want to call this acitivity
+            startActivity(intent) //run the activity 2
+
+        }
+
 
         //getCurrentLocation()
         if ( ActivityCompat.checkSelfPermission( requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -73,6 +100,8 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
                             tvDescription.text = "Current Weather: ${result.weather[0].description}"
                             tvTemp.text = "Current Temperature: ${result.main.temp} F"
 
+
+
                         } else {
                             tvName.text = "Code :" + response.code()
                             return
@@ -92,7 +121,8 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
     }
 
 
-    //these two functions are based on https://stackoverflow.com/questions/36512349/how-do-i-get-my-last-known-location-in-android/62761897#62761897
+    //
+//    //these two functions are based on https://stackoverflow.com/questions/36512349/how-do-i-get-my-last-known-location-in-android/62761897#62761897
     private fun getCurrentLocation() {
 
         if ( ActivityCompat.checkSelfPermission( requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -134,7 +164,6 @@ class LondonFragment : Fragment(R.layout.london_fragment) {
             }
         }
     }
-
 
 
 }
